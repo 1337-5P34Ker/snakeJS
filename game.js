@@ -7,6 +7,11 @@ const ctx = arena.getContext("2d");
 const snakeColor = '#98CD8D';
 const snakeBorderColor = '#990000';
 const arenaColor = 'beige';
+const fruitColor = '#56F299';
+const fruitBorderColor = '#009900';
+
+let foodX;
+let foodY;
 // delta horizontal pro Schritt
 let dx = 10;
 // delta vertikal pro Schritt
@@ -50,9 +55,14 @@ function moveSnake() {
         x: snake[0].x + dx,
         y: snake[0].y + dy
     };
-    snake.unshift(head); // head ansetzen
+    snake.unshift(head); // head ansetzen 
+    if (snake[0].x === foodX && snake[0].y === foodY) {
+      // Generate new food location
+      createFood();
+    } else {    
     snake.pop(); // letztes Element aus Array löschen
     if (hasCollided()) alert('game over');
+}
 }
 
 function resetArena() {
@@ -63,6 +73,7 @@ function resetArena() {
 function main() {
     window.setTimeout(() => {
         resetArena();
+        drawFood();
         moveSnake();
         drawSnake();
         main();
@@ -122,5 +133,30 @@ function hasCollided() {
     return collideLeftBorder || collideRightBorder || collideTopBorder || collideBottomBorder || collideWithBody
 }
 
+function getRandomPosition(min, max)
+{  
+   return Math.round((Math.random() * (max-min) + min) / 10) * 10;
+}
+ 
+function createFood() 
+{  
+   foodX = getRandomPosition(0, arena.width - 10);
+   foodY = getRandomPosition(0, arena.height - 10);
+   snake.forEach((part) => {
+       if(part.x == foodX && part.y == foodY)
+         createFood();
+      });
+}
+
+function drawFood()
+{
+      ctx.fillStyle = fruitColor;
+      ctx.strokestyle = fruitBorderColor;
+      ctx.fillRect(foodX, foodY, 10, 10);
+      ctx.strokeRect(foodX, foodY, 10, 10);
+}
+
 main();
+createFood();
+
 document.addEventListener("keydown", handleKeydownEvent); // Richtung ändern
