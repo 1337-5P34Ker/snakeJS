@@ -52,7 +52,7 @@ function moveSnake() {
     };
     snake.unshift(head); // head ansetzen
     snake.pop(); // letztes Element aus Array löschen
-    if(hasCollided()) alert('game over');
+    if (hasCollided()) alert('game over');
 }
 
 function resetArena() {
@@ -66,7 +66,7 @@ function main() {
         moveSnake();
         drawSnake();
         main();
-    }, 500);
+    }, 200);
 }
 
 function handleKeydownEvent(event) {
@@ -78,7 +78,6 @@ function handleKeydownEvent(event) {
     const goingRight = dx === 10;
     const goingLeft = dx === -10;
 
-    console.log(event.key);
     switch (event.key) {
         case 'ArrowLeft':
             if (!goingRight) {
@@ -111,11 +110,16 @@ function handleKeydownEvent(event) {
 }
 
 function hasCollided() {
+
+    let collideWithBody = false;
+    for (let i = 1; i < snake.length; i++) {
+        if (snake[i].x === snake[0].x && snake[i].y === snake[0].y) collideWithBody = true;
+    }
     const collideLeftBorder = snake[0].x < 0;
     const collideRightBorder = snake[0].x > arena.width - 10;
     const collideTopBorder = snake[0].y < 0;
     const collideBottomBorder = snake[0].y > arena.height - 10;
-    return collideLeftBorder || collideRightBorder || collideTopBorder || collideBottomBorder
+    return collideLeftBorder || collideRightBorder || collideTopBorder || collideBottomBorder || collideWithBody
 }
 
 main();
