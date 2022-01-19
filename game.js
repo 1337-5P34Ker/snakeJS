@@ -48,7 +48,7 @@ function moveSnake() {
     // head ist das neue erste Element des Arrays 
     const head = {
         x: snake[0].x + dx,
-        y: snake[0].y
+        y: snake[0].y + dy
     };
     snake.unshift(head); // head ansetzen
     snake.pop(); // letztes Element aus Array löschen
@@ -66,6 +66,48 @@ function main() {
         drawSnake();
         main();
     }, 500);
-
 }
+
+function handleKeydownEvent(event) {
+
+    // aktuelle Richtung ermitteln
+    
+    const goingUp = dy === -10;
+    const goingDown = dy === 10;
+    const goingRight = dx === 10;
+    const goingLeft = dx === -10;
+
+    console.log(event.key);
+    switch (event.key) {
+        case 'ArrowLeft':
+            if (!goingRight) {
+                dx = -10;
+                dy = 0;
+            }
+            break;
+
+        case 'ArrowUp':
+            if (!goingDown) {
+                dx = 0;
+                dy = -10;
+            }
+            break;
+
+        case 'ArrowRight':
+            if (!goingLeft) {
+                dx = 10;
+                dy = 0;
+            }
+            break;
+
+        case 'ArrowDown':
+            if (!goingUp) {
+                dx = 0;
+                dy = 10;
+            }
+            break;
+    }
+}
+
 main();
+document.addEventListener("keydown", handleKeydownEvent); // Richtung ändern
