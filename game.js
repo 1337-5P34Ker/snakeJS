@@ -52,6 +52,7 @@ function moveSnake() {
     };
     snake.unshift(head); // head ansetzen
     snake.pop(); // letztes Element aus Array löschen
+    if(hasCollided()) alert('game over');
 }
 
 function resetArena() {
@@ -71,7 +72,7 @@ function main() {
 function handleKeydownEvent(event) {
 
     // aktuelle Richtung ermitteln
-    
+
     const goingUp = dy === -10;
     const goingDown = dy === 10;
     const goingRight = dx === 10;
@@ -107,6 +108,14 @@ function handleKeydownEvent(event) {
             }
             break;
     }
+}
+
+function hasCollided() {
+    const collideLeftBorder = snake[0].x < 0;
+    const collideRightBorder = snake[0].x > arena.width - 10;
+    const collideTopBorder = snake[0].y < 0;
+    const collideBottomBorder = snake[0].y > arena.height - 10;
+    return collideLeftBorder || collideRightBorder || collideTopBorder || collideBottomBorder
 }
 
 main();
