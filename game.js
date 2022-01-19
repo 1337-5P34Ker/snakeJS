@@ -3,6 +3,8 @@ const arena = document.getElementById("arena");
 // als 2D-Element
 const ctx = arena.getContext("2d");
 
+const scoreElement = document.getElementById("score");
+
 /* Settings */
 const snakeColor = '#98CD8D';
 const snakeBorderColor = '#990000';
@@ -12,10 +14,9 @@ const fruitBorderColor = '#009900';
 
 let foodX;
 let foodY;
-// delta horizontal pro Schritt
 let dx = 10;
-// delta vertikal pro Schritt
 let dy = 0;
+let score = 0;
 
 let snake = [{
     x: 200,
@@ -48,6 +49,10 @@ function drawSnake() {
     snake.forEach(drawSnakePart);
 }
 
+function renderScore(){
+    scoreElement.innerText = `score: ${score}`;
+}
+
 // Bewegung (rechts)
 function moveSnake() {
     // head ist das neue erste Element des Arrays 
@@ -57,11 +62,12 @@ function moveSnake() {
     };
     snake.unshift(head); // head ansetzen 
     if (snake[0].x === foodX && snake[0].y === foodY) {
+        score += 10; // gefressen
       // Generate new food location
       createFood();
     } else {    
     snake.pop(); // letztes Element aus Array löschen
-    if (hasCollided()) alert('game over');
+    if (hasCollided()) console.log('game over');
 }
 }
 
@@ -76,6 +82,7 @@ function main() {
         drawFood();
         moveSnake();
         drawSnake();
+        renderScore();
         main();
     }, 200);
 }

@@ -1,11 +1,14 @@
 html,
 body {
     height: 100%;
+    margin: 0;
+    padding: 0;
 }
 
 .container {
     display: flex;
     justify-content: center;
+    flex-direction: column;
     align-items: center;
     background-image: linear-gradient(90deg, #98CD8D 33.33%, #F6F0CF 33.33%, #F6F0CF 50%, #98CD8D 50%, #98CD8D 83.33%, #F6F0CF 83.33%, #F6F0CF 100%);
     background-size: 120.00px 120.00px;
@@ -16,4 +19,15 @@ body {
     box-shadow: 4px 4px 15px 2px rgba(0, 0, 0, 0.51);
     background-color: beige;
     border: 7px solid #98CD8D;
+}
+
+#score {
+     background-color: beige;
+    min-width: 200px;;
+    color:#98CD8D;
+    font-size: 1.5em;
+    margin-bottom: 1em;
+    opacity: 0.9;
+    padding: 0.5em;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 }
