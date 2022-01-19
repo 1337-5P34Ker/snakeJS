@@ -17,25 +17,28 @@ let foodY;
 let dx = 10;
 let dy = 0;
 let score = 0;
+let directionChanged = false;
+let isGameOver = false;
+let interval;
 
-let snake = [{
-    x: 200,
+const start = [{
+    x: 100,
     y: 200
 }, {
-    x: 190,
+    x: 90,
     y: 200
 }, {
-    x: 180,
+    x: 80,
     y: 200
 }, {
-    x: 170,
+    x: 70,
     y: 200
 }, {
-    x: 160,
+    x: 60,
     y: 200
 }, ];
 
-
+let snake = [...start];
 
 function drawSnakePart(snakePart) {
     ctx.fillStyle = snakeColor;
@@ -49,7 +52,7 @@ function drawSnake() {
     snake.forEach(drawSnakePart);
 }
 
-function renderScore(){
+function renderScore() {
     scoreElement.innerText = `score: ${score}`;
 }
 
@@ -63,12 +66,12 @@ function moveSnake() {
     snake.unshift(head); // head ansetzen 
     if (snake[0].x === foodX && snake[0].y === foodY) {
         score += 10; // gefressen
-      // Generate new food location
-      createFood();
-    } else {    
-    snake.pop(); // letztes Element aus Array löschen
-    if (hasCollided()) console.log('game over');
-}
+        // Generate new food location
+        createFood();
+    } else {
+        snake.pop(); // letztes Element aus Array löschen
+        if (hasCollided()) isGameOver = true;
+    }
 }
 
 function resetArena() {
@@ -76,19 +79,33 @@ function resetArena() {
     ctx.fillRect(0, 0, arena.width, arena.height);
 }
 
+function resetGame() {
+    score = 0;
+    snake = [...start];
+    isGameOver = false;
+    console.log('Game over');
+    dx = 10;
+    dy = 0;
+    clearInterval(interval);
+    main();
+}
+
 function main() {
-    window.setTimeout(() => {
+    interval = window.setInterval(() => {
+        if (isGameOver) resetGame();
+        directionChanged = false;
         resetArena();
         drawFood();
         moveSnake();
         drawSnake();
         renderScore();
-        main();
     }, 200);
 }
 
 function handleKeydownEvent(event) {
 
+    if (directionChanged) return;
+    directionChanged = true;
     // aktuelle Richtung ermitteln
 
     const goingUp = dy === -10;
@@ -140,27 +157,24 @@ function hasCollided() {
     return collideLeftBorder || collideRightBorder || collideTopBorder || collideBottomBorder || collideWithBody
 }
 
-function getRandomPosition(min, max)
-{  
-   return Math.round((Math.random() * (max-min) + min) / 10) * 10;
-}
- 
-function createFood() 
-{  
-   foodX = getRandomPosition(0, arena.width - 10);
-   foodY = getRandomPosition(0, arena.height - 10);
-   snake.forEach((part) => {
-       if(part.x == foodX && part.y == foodY)
-         createFood();
-      });
+function getRandomPosition(min, max) {
+    return Math.round((Math.random() * (max - min) + min) / 10) * 10;
 }
 
-function drawFood()
-{
-      ctx.fillStyle = fruitColor;
-      ctx.strokestyle = fruitBorderColor;
-      ctx.fillRect(foodX, foodY, 10, 10);
-      ctx.strokeRect(foodX, foodY, 10, 10);
+function createFood() {
+    foodX = getRandomPosition(0, arena.width - 10);
+    foodY = getRandomPosition(0, arena.height - 10);
+    snake.forEach((part) => {
+        if (part.x == foodX && part.y == foodY)
+            createFood();
+    });
+}
+
+function drawFood() {
+    ctx.fillStyle = fruitColor;
+    ctx.strokestyle = fruitBorderColor;
+    ctx.fillRect(foodX, foodY, 10, 10);
+    ctx.strokeRect(foodX, foodY, 10, 10);
 }
 
 main();
