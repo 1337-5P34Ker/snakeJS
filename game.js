@@ -6,11 +6,16 @@ const ctx = arena.getContext("2d");
 const scoreElement = document.getElementById("score");
 
 /* Settings */
-const snakeColor = '#98CD8D';
-const snakeBorderColor = '#990000';
+const snakeColor = 'rgba(255,100,100,0.1)'; // '#FFCC33';
+const snakeBorderColor = "rgba(255,0,0,0.5)";
 const arenaColor = 'beige';
-const fruitColor = '#56F299';
-const fruitBorderColor = '#009900';
+const fruitColor = '#990000';
+const snakeHeadColor1 = 'green';
+const snakeHeadColor2 = 'blue';
+const Up = Symbol("up");
+const Down = Symbol("down");
+const Left = Symbol("left");
+const Right = Symbol("right");
 
 let foodX;
 let foodY;
@@ -40,16 +45,85 @@ const start = [{
 
 let snake = [...start];
 
-function drawSnakePart(snakePart) {
-    ctx.fillStyle = snakeColor;
+function drawSnakePart(snakePart, index) {
+
     ctx.strokestyle = snakeBorderColor;
-    ctx.fillRect(snakePart.x, snakePart.y, 10, 10);
-    ctx.strokeRect(snakePart.x, snakePart.y, 10, 10);
+    if (index == 0) {
+
+        let direction = dy === -10 ? Up : dy === 10 ? Down : dx === 10 ? Right : Left;
+
+        console.log(direction);
+
+        switch (direction) {
+            case Up:
+                ctx.beginPath();
+                ctx.arc(snakePart.x + 5, snakePart.y + 5, 8, 0.5 * Math.PI, 1.3 * Math.PI)
+                ctx.fillStyle = snakeHeadColor1;
+                ctx.fill();
+                ctx.closePath();
+                ctx.beginPath();
+                ctx.arc(snakePart.x + 5, snakePart.y + 5, 8, 1.7 * Math.PI, 0.5 * Math.PI)
+                ctx.fillStyle = snakeHeadColor2;
+                ctx.fill();
+                ctx.closePath();
+                break;    
+            
+        
+
+            case Down:
+
+                ctx.beginPath();
+                ctx.arc(snakePart.x + 5, snakePart.y + 5, 8, 1.5 * Math.PI, 0.3 * Math.PI)
+                ctx.fillStyle = snakeHeadColor1;
+                ctx.fill();
+                ctx.closePath();
+                ctx.beginPath();
+                ctx.arc(snakePart.x + 5, snakePart.y + 5, 8, .7 * Math.PI, 1.5 * Math.PI)
+                ctx.fillStyle = snakeHeadColor2;
+                ctx.fill();
+                ctx.closePath();
+
+                break;
+            case Right:
+                ctx.beginPath();
+                ctx.arc(snakePart.x + 5, snakePart.y + 5, 8, 0.2 * Math.PI, 1 * Math.PI)
+                ctx.fillStyle = snakeHeadColor1;
+                ctx.fill();
+                ctx.closePath();
+                ctx.beginPath();
+                ctx.arc(snakePart.x + 5, snakePart.y + 5, 8, 1 * Math.PI, 1.8 * Math.PI)
+                ctx.fillStyle = snakeHeadColor2;
+                ctx.fill();
+                ctx.closePath();
+                break;
+            case Left:
+                ctx.beginPath();
+                ctx.arc(snakePart.x + 5, snakePart.y + 5, 8, 0 * Math.PI, 0.8 * Math.PI)
+                ctx.fillStyle = snakeHeadColor1;
+                ctx.fill();
+                ctx.closePath();
+                ctx.beginPath();
+                ctx.arc(snakePart.x + 5, snakePart.y + 5, 8, 1.2 * Math.PI, 2 * Math.PI)
+                ctx.fillStyle = snakeHeadColor2;
+                ctx.fill();
+                ctx.closePath();
+                break;
+        }
+
+
+
+    } else {
+        ctx.beginPath();
+        ctx.fillStyle = snakeColor;
+        ctx.fillRect(snakePart.x, snakePart.y, 10, 10);
+        ctx.strokeRect(snakePart.x, snakePart.y, 10, 10);
+        ctx.closePath();
+    }
 }
 
 /*Function that prints the parts*/
 function drawSnake() {
-    snake.forEach(drawSnakePart);
+    snake.forEach((p, i) => drawSnakePart(p, i));
 }
 
 function renderScore() {
@@ -79,6 +153,14 @@ function resetArena() {
     ctx.fillRect(0, 0, arena.width, arena.height);
 }
 
+function gameOver() {
+    /* 
+    Mach irgendwas
+    */
+
+    resetGame();
+}
+
 function resetGame() {
     score = 0;
     snake = [...start];
@@ -99,7 +181,7 @@ function main() {
         moveSnake();
         drawSnake();
         renderScore();
-    }, 200);
+    }, 150);
 }
 
 function handleKeydownEvent(event) {
@@ -171,10 +253,16 @@ function createFood() {
 }
 
 function drawFood() {
+
     ctx.fillStyle = fruitColor;
-    ctx.strokestyle = fruitBorderColor;
-    ctx.fillRect(foodX, foodY, 10, 10);
-    ctx.strokeRect(foodX, foodY, 10, 10);
+    ctx.beginPath();
+    ctx.moveTo(0 + foodX, 5 + foodY);
+    ctx.lineTo(5 + foodX, 0 + foodY);
+    ctx.lineTo(10 + foodX, 5 + foodY);
+    ctx.lineTo(5 + foodX, 10 + foodY);
+    ctx.lineTo(0 + foodX, 5 + foodY);
+    ctx.closePath();
+    ctx.fill();
 }
 
 main();
